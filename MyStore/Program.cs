@@ -1,4 +1,4 @@
-using ArtDatabaseMuseum.Data;
+using MyStore.Data;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
