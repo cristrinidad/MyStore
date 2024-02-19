@@ -1,5 +1,5 @@
-﻿using MyStore.Models;
-using MyStore.Data;
+﻿using MyStores.Models;
+using MyStores.DataAccess.Data;
 using Microsoft.AspNetCore.Mvc;
 
 namespace MyStore.Controllers
