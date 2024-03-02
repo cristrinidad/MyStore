@@ -4,10 +4,13 @@ using Microsoft.AspNetCore.Mvc;
 using MyStores.DataAccess.Repository.IRepository;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using MyStores.Models.ViewModels;
+using Microsoft.AspNetCore.Authorization;
+using MyStores.Utilities;
 
 namespace MyStore.Areas.Admin.Controllers
 {
     [Area("Admin")]
+    [Authorize(Roles = SD.Role_Admin)]
     public class ProductController : Controller
     {
         private readonly IUnitOfWork _unitOfWork;

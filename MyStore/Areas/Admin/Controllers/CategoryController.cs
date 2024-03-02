@@ -2,10 +2,13 @@
 using MyStores.DataAccess.Data;
 using Microsoft.AspNetCore.Mvc;
 using MyStores.DataAccess.Repository.IRepository;
+using Microsoft.AspNetCore.Authorization;
+using MyStores.Utilities;
 
 namespace MyStore.Areas.Admin.Controllers
 {
     [Area("Admin")]
+    [Authorize(Roles = SD.Role_Admin)]
     public class CategoryController : Controller
     {
         private readonly IUnitOfWork _unitOfWork;

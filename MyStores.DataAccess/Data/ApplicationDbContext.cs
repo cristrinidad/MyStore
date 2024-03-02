@@ -1,9 +1,11 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore;
 using MyStores.Models;
 
 namespace MyStores.DataAccess.Data
 {
-    public class ApplicationDbContext: DbContext
+    public class ApplicationDbContext : IdentityDbContext<IdentityUser>
     {
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : base(options)
         {
@@ -12,9 +14,14 @@ namespace MyStores.DataAccess.Data
 
         public DbSet<Category> Categories { get; set; }
         public DbSet<Product> Products { get; set; }
+        public DbSet<ApplicationUser> ApplicationUsers { get; set; }
+        public DbSet<Company> Companies { get; set; }
+        public DbSet<ShoppingCart> ShoppingCarts { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            base.OnModelCreating(modelBuilder);
+
             modelBuilder.Entity<Category>().HasData(
                 new Category { Id = 1, Name = "Action", DisplayOrder = 1 },
                 new Category { Id = 2, Name = "Sci-Fi", DisplayOrder = 2 },
@@ -108,6 +115,13 @@ namespace MyStores.DataAccess.Data
                     ImageUrl = ""
                 }
                 );
+
+                modelBuilder.Entity<Company>().HasData(
+                   new Company { Id = 1, Name = "CompuSearch", StreetAddress = "1234 Dulles", City = "Dulles", State = "VA", PostalCode = "28462" },
+                   new Company { Id = 2, Name = "Unison Global", StreetAddress = "4321 Tyson", City = "Tyson", State = "VA", PostalCode = "41412" },
+                   new Company { Id = 3, Name = "Google", StreetAddress = "3648 Boulder", City = "Boulder", State = "CO", PostalCode = "62432" }
+
+                   );
         }
 
 
