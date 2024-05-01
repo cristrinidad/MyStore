@@ -38,7 +38,7 @@ namespace MyStore.Migrations
                 keyColumn: "Id",
                 keyValue: 2,
                 column: "CategoryId",
-                value: 4);
+                value: 3);
 
             migrationBuilder.UpdateData(
                 table: "Products",

@@ -1,8 +1,10 @@
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using MyStores.DataAccess.Repository;
 using MyStores.DataAccess.Repository.IRepository;
 using MyStores.Models;
+using MyStores.Utilities;
 using System.Diagnostics;
 using System.Security.Claims;
 
@@ -53,14 +55,17 @@ namespace MyStore.Areas.Customer.Controllers
                 // The shopping cart exist
                 cartFromDb.Count += shoppingCart.Count;
                 _unitOfWork.ShoppingCartRepository.Update(cartFromDb);
+                _unitOfWork.Save();
             }
             else{
                 // It does not exist, so add a card record
                 _unitOfWork.ShoppingCartRepository.Add(shoppingCart);
+                _unitOfWork.Save();
+                HttpContext.Session.SetInt32(SD.SessionCart, 
+                    _unitOfWork.ShoppingCartRepository.GetAll(u => u.ApplicationUserId == userId).Count());
             }
 
             TempData["success"] = "Cart updated successfully";
-            _unitOfWork.Save();
 
             return RedirectToAction(nameof(Index));
         }
