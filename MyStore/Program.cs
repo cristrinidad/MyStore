@@ -7,13 +7,14 @@ using MyStores.Utilities;
 using Microsoft.AspNetCore.Identity.UI.Services;
 using Stripe;
 using MyStores.DataAccess.DbInitializer;
+using Npgsql;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
-    options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection"),b => b.MigrationsAssembly("MyStore")));
+    options.UseNpgsql(GetHerokuConnectionString(builder.Configuration), b => b.MigrationsAssembly("MyStore")));
 
 builder.Services.Configure<StripeSettings>(builder.Configuration.GetSection("Stripe"));
 
@@ -38,6 +39,13 @@ builder.Services.AddRazorPages();
 builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
 builder.Services.AddScoped<IEmailSender, EmailSender>();
 var app = builder.Build();
+
+if (!string.IsNullOrEmpty(Environment.GetEnvironmentVariable("DATABASE_URL")))
+{
+    var port = Environment.GetEnvironmentVariable("PORT") ?? "5000";
+    app.Urls.Add($"http://*:{port}");
+}
+
 
 // Configure the HTTP request pipeline.
 if (!app.Environment.IsDevelopment())
@@ -69,4 +77,38 @@ void SeedDatabase()
         var dbInitializer = scope.ServiceProvider.GetRequiredService<IDbInitializer>();
         dbInitializer.Initialize();
     }
+}
+
+string? GetHerokuConnectionString(IConfiguration configuration)
+{
+
+    var databaseUrl = Environment.GetEnvironmentVariable("DATABASE_URL");
+    string connectionString;
+
+    if(!string.IsNullOrEmpty(databaseUrl))
+    {
+        var databaseUri = new Uri(databaseUrl);
+        var userInfo = databaseUri.UserInfo.Split(':');
+        var builder = new NpgsqlConnectionStringBuilder
+        {
+            Host = databaseUri.Host,
+            Port = databaseUri.Port,
+            Username = userInfo[0],
+            Password = userInfo[1],
+            Database = databaseUri.LocalPath.TrimStart('/')
+        };
+
+        // Whether to use SSL or not
+        // Require SSL in production, but you can disable it for development if needed
+        builder.SslMode = SslMode.Require;
+        builder.TrustServerCertificate = true;
+
+        connectionString =  builder.ToString();
+    }
+    else
+    {
+        connectionString = configuration.GetConnectionString("DefaultConnection");
+    }
+
+    return connectionString;
 }
