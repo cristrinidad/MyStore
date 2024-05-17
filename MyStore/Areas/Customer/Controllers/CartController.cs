@@ -82,7 +82,7 @@ namespace MyStore.Areas.Customer.Controllers
             ShoppingCartVM.ShoppingCartList = _unitOfWork.ShoppingCartRepository.GetAll(u => u.ApplicationUserId == userId,
                     includeProperties: "Product");
 
-            ShoppingCartVM.OrderHeader.OrderDate = System.DateTime.Now;
+            ShoppingCartVM.OrderHeader.OrderDate = System.DateTime.Now.ToUniversalTime();
             ShoppingCartVM.OrderHeader.ApplicationUserId = userId;
 
 			ApplicationUser applicationUser= _unitOfWork.ApplicationUserRepository.Get(u => u.Id == userId);
