@@ -91,7 +91,7 @@ namespace MyStore.Areas.Admin.Controllers
             orderHeader.TrackingNumber = OrderVM.OrderHeader.TrackingNumber;
             orderHeader.Carrier = OrderVM.OrderHeader.Carrier;
             orderHeader.OrderStatus = SD.StatusShipped;
-            orderHeader.ShippingDate = DateTime.Now;
+            orderHeader.ShippingDate = DateTime.Now.ToUniversalTime();
 
             if(orderHeader.PaymentStatus == SD.PaymentStatusDelayedPayment)
             {

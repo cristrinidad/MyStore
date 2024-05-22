@@ -185,6 +185,9 @@ namespace MyStore.Areas.Customer.Controllers
                 .GetAll(u => u.ApplicationUserId == orderHeader.ApplicationUserId).ToList();
 
             _unitOfWork.ShoppingCartRepository.RemoveRange(shoppingCarts);
+            HttpContext.Session.SetInt32(SD.SessionCart,
+                   _unitOfWork.ShoppingCartRepository.GetAll
+                   (u => u.ApplicationUserId == orderHeader.ApplicationUserId).Count());
             _unitOfWork.Save();
 
             return View(id);

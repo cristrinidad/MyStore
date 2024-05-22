@@ -76,8 +76,8 @@ namespace MyStores.DataAccess.Repository
 
         public void RemoveRange(IEnumerable<T> entities)
         {
-            dbSet.RemoveRange(entities);
-
+            dbSet.RemoveRange(entities.ToList());
+            _db.SaveChanges();
         }
     }
 }
