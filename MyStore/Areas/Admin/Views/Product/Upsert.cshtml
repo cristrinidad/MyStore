@@ -62,11 +62,6 @@
                             </select>
                             <span asp-validation-for="Product.CategoryId" class="text-danger"></span>
                         </div>
-                        <div class="mb-3 row p-1">
-                            <label asp-for="Product.ImageUrl" class="p-0"></label>
-                            <input type="file" name="file" asp-for="Product.ImageUrl" class="form-control" />
-                            <span asp-validation-for="Product.ImageUrl" class="text-danger"></span>
-                        </div>
                         <div class="row">
                             <div class="col-6">
                                 @if (Model.Product.Id != 0)
@@ -86,10 +81,6 @@
 
 
                     </div>
-                </div>
-                <div class="col-2">
-                    <img src="@Model.Product.ImageUrl" width="100%"
-                        style="border-radius:5px; border:1px solid #bbb9b9" />
                 </div>
             </div>
             
